@@ -2,9 +2,13 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import HeadingComponent from "./src/Components/HeadingComponent";
 import BodyComponent from "./src/Components/BodyComponent";
-// const styleCards = {
-//   backgroundColor: "#f0f0f0",
-// };
+import { createBrowserRouter } from "react-router-dom";
+import AboutComponent from "./src/Components/AboutComponent";
+import { RouterProvider } from "react-router-dom";
+import ErrorComponent from "./src/Components/ErrorComponent";
+import ContactComponent from "./src/Components/ContactComponent";
+import { Outlet } from "react-router-dom";
+import RestaurantMenuComponent from "./src/Components/RestaurantMenuComponent";
 
 const RestroCardComponent = (props) => {
   const { restaurant } = props;
@@ -39,10 +43,36 @@ const AppComponent = () => {
   return (
     <div className="app-conatiner">
       <HeadingComponent />
-      <BodyComponent />
+      <Outlet />
     </div>
   );
 };
 
+const appRouter = createBrowserRouter([
+  {
+    path: "/",
+    element: <AppComponent />,
+    children: [
+      {
+        path: "/",
+        element: <BodyComponent />,
+      },
+      {
+        path: "/about",
+        element: <AboutComponent />,
+      },
+      {
+        path: "/contact",
+        element: <ContactComponent />,
+      },
+      {
+        path: "/restaurant/:resId",
+        element: <RestaurantMenuComponent />,
+      },
+    ],
+    errorElement: <ErrorComponent />,
+  },
+]);
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<AppComponent />);
+root.render(<RouterProvider router={appRouter} />);

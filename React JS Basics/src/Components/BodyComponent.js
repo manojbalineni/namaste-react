@@ -1,6 +1,7 @@
 import RestroCardComponent from "./RestroCardComponent";
 import { useState, useEffect } from "react";
 import ShimmerUI from "./ShimmerUI";
+import { Link } from "react-router-dom";
 
 const BodyComponent = () => {
   const [listOfRestaurants, setListOfRestaurants] = useState([]);
@@ -55,9 +56,9 @@ const BodyComponent = () => {
           className="filter-btn"
           onClick={() => {
             const filteredRest = listOfRestaurants.filter(
-              (res) => res.info.avgRating > 4
+              (res) => res.info.avgRating > 4.5
             );
-            setListOfRestaurants(filteredRest);
+            setFilteredListOfRestaurants(filteredRest);
           }}
         >
           Top Rated Restaurants
@@ -65,7 +66,9 @@ const BodyComponent = () => {
       </div>
       <div className="rest-container">
         {filteredListOfRestaurants.map((r) => (
-          <RestroCardComponent key={r.info.id} restaurant={r} />
+          <Link key={r.info.id} to={"/restaurant/" + r.info.id}>
+            <RestroCardComponent restaurant={r} />
+          </Link>
         ))}
       </div>
     </div>

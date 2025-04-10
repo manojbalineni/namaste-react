@@ -68,3 +68,8 @@
 .search-button {
   cursor: pointer;
 }
+
+.user-card {
+  border: solid 1px black;
+  padding: 10px;
+}

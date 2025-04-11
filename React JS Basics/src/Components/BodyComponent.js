@@ -2,6 +2,7 @@ import RestroCardComponent from "./RestroCardComponent";
 import { useState, useEffect } from "react";
 import ShimmerUI from "./ShimmerUI";
 import { Link } from "react-router-dom";
+import useOnlineStatus from "../Utilities/useOnlineStatus";
 
 const BodyComponent = () => {
   const [listOfRestaurants, setListOfRestaurants] = useState([]);
@@ -12,6 +13,8 @@ const BodyComponent = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  const onlineStatus = useOnlineStatus();
 
   const fetchData = async () => {
     const data = await fetch(
@@ -27,22 +30,26 @@ const BodyComponent = () => {
     );
     console.log(json);
   };
+
+  if (onlineStatus === false) {
+    return <h1> You are offline!!!. Please check your internet connection</h1>;
+  }
   if (filteredListOfRestaurants.length === 0) {
     return <ShimmerUI />;
   }
   return (
     <div className="body">
-      <div className="div-btn">
+      <div className="flex items-center m-4 p-4 ">
         <input
           type="text"
-          className="search-text"
+          className="border border-solid border-black h-6"
           value={searchText}
           onChange={(e) => {
             setSearchText(e.target.value);
           }}
         />
         <button
-          className="search-button"
+          className=" px-4 py-2 bg-blue-100 m-4 cursor-pointer rounded-lg text-start"
           onClick={() => {
             const filteredList = listOfRestaurants.filter((res) =>
               res.info.name.toLowerCase().includes(searchText.toLowerCase())
@@ -53,7 +60,7 @@ const BodyComponent = () => {
           Search
         </button>
         <button
-          className="filter-btn"
+          className="px-4 py-2 bg-gray-100 m-4 cursor-pointer rounded-lg"
           onClick={() => {
             const filteredRest = listOfRestaurants.filter(
               (res) => res.info.avgRating > 4.5
@@ -64,7 +71,7 @@ const BodyComponent = () => {
           Top Rated Restaurants
         </button>
       </div>
-      <div className="rest-container">
+      <div className="flex flex-wrap">
         {filteredListOfRestaurants.map((r) => (
           <Link key={r.info.id} to={"/restaurant/" + r.info.id}>
             <RestroCardComponent restaurant={r} />

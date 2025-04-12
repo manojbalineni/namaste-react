@@ -1,9 +1,11 @@
-import RestroCardComponent from "./RestroCardComponent";
-import { useState, useEffect } from "react";
+import RestroCardComponent, {
+  PromotedRestroCardComponent,
+} from "./RestroCardComponent";
+import { useState, useEffect, useContext } from "react";
 import ShimmerUI from "./ShimmerUI";
 import { Link } from "react-router-dom";
 import useOnlineStatus from "../Utilities/useOnlineStatus";
-
+import UserContext from "../Utilities/UserContext";
 const BodyComponent = () => {
   const [listOfRestaurants, setListOfRestaurants] = useState([]);
   const [searchText, setSearchText] = useState("");
@@ -15,6 +17,11 @@ const BodyComponent = () => {
   }, []);
 
   const onlineStatus = useOnlineStatus();
+
+  const { loggedInUser, setUserName } = useContext(UserContext);
+
+  const WithPromotedRestaurantCard =
+    PromotedRestroCardComponent(RestroCardComponent);
 
   const fetchData = async () => {
     const data = await fetch(
@@ -70,11 +77,24 @@ const BodyComponent = () => {
         >
           Top Rated Restaurants
         </button>
+
+        <div>
+          <input
+            className="border border-black"
+            type="text"
+            value={loggedInUser}
+            onChange={(e) => setUserName(e.target.value)}
+          />
+        </div>
       </div>
       <div className="flex flex-wrap">
         {filteredListOfRestaurants.map((r) => (
           <Link key={r.info.id} to={"/restaurant/" + r.info.id}>
-            <RestroCardComponent restaurant={r} />
+            {r.info.avgRating >= 4.4 ? (
+              <WithPromotedRestaurantCard restaurant={r} />
+            ) : (
+              <RestroCardComponent restaurant={r} />
+            )}
           </Link>
         ))}
       </div>

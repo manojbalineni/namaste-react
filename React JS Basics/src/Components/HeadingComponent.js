@@ -1,11 +1,16 @@
 import { LOGO_URL } from "../Utilities/constants";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import useOnlineStatus from "../Utilities/useOnlineStatus";
+import UserContext from "../Utilities/UserContext";
 
 const HeadingComponent = () => {
   const [btnLoginReact, setBtnLoginReact] = useState("Login");
   const onlineStatus = useOnlineStatus();
+
+  const { loggedInUser } = useContext(UserContext);
+  console.log(loggedInUser);
+
   return (
     <div className="flex justify-between bg-pink-100 shadow-lg m-2">
       <div className="logo-container">
@@ -42,6 +47,7 @@ const HeadingComponent = () => {
               {btnLoginReact}{" "}
             </button>
           </li>
+          <li className="px-4 font-bold text-lg">{loggedInUser}</li>
         </ul>
       </div>
     </div>
